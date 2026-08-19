@@ -1,0 +1,14 @@
+package com.camiones.entity;
+
+import jakarta.persistence.*;
+import lombok.*;
+
+@Entity @Table(name="conductores")
+@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
+public class Conductor {
+    @Id @GeneratedValue(strategy=GenerationType.IDENTITY) private Long id;
+    @Column(nullable=false) private String nombre;
+    @Column(nullable=false, unique=true) private String documento;
+    @Column(nullable=false) private String licencia;
+    @Column(nullable=false) private boolean activo;
+}
