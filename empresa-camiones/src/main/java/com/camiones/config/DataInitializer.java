@@ -34,15 +34,15 @@ public class DataInitializer {
 
             if (conductores.count() == 0) {
                 conductores.save(Conductor.builder()
-                        .nombre("Carlos Pérez")
-                        .documento("1001001001")
+                        .nombre("Fernando Agressor")
+                        .documento("29273644")
                         .licencia("C3")
                         .activo(true)
                         .build());
 
                 conductores.save(Conductor.builder()
-                        .nombre("Ana Gómez")
-                        .documento("1001001002")
+                        .nombre("Jaison Davila")
+                        .documento("182939092")
                         .licencia("C3")
                         .activo(true)
                         .build());
@@ -50,14 +50,14 @@ public class DataInitializer {
 
             if (camiones.count() == 0) {
                 camiones.save(Camion.builder()
-                        .placa("ABC123")
+                        .placa("KBF347")
                         .marca("Volvo")
                         .modelo("FH 2024")
                         .activo(true)
                         .build());
 
                 camiones.save(Camion.builder()
-                        .placa("XYZ789")
+                        .placa("OEY874")
                         .marca("Scania")
                         .modelo("R 2023")
                         .activo(true)
