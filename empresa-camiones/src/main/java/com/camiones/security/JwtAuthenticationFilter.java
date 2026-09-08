@@ -45,8 +45,22 @@ public class JwtAuthenticationFilter
 
         String jwt = authHeader.substring(7);
 
-        String username =
-                jwtService.extraerUsername(jwt);
+        String username;
+
+        try {
+
+            username =
+                    jwtService.extraerUsername(jwt);
+
+        } catch (Exception e) {
+
+            filterChain.doFilter(
+                    request,
+                    response
+            );
+
+            return;
+        }
 
         if (username != null
                 && SecurityContextHolder
