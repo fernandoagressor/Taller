@@ -2,34 +2,58 @@ package com.camiones.service;
 
 import com.camiones.dto.LoginRequest;
 import com.camiones.dto.LoginResponse;
-import com.camiones.entity.Usuario;
-import com.camiones.repository.UsuarioRepository;
+import com.camiones.security.JwtService;
+
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
+
+import com.camiones.entity.Rol;
+
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @RequiredArgsConstructor
 public class AuthService {
 
-    private final UsuarioRepository usuarioRepository;
+    private final AuthenticationManager authenticationManager;
+    private final JwtService jwtService;
+
 
     public LoginResponse login(LoginRequest request) {
-        Usuario usuario = usuarioRepository.findByUsername(request.username())
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.UNAUTHORIZED,
-                        "Usuario o contraseña incorrectos"));
 
-        if (!usuario.isActivo() || !usuario.getPassword().equals(request.password())) {
-            throw new ResponseStatusException(
-                    HttpStatus.UNAUTHORIZED,
-                    "Usuario o contraseña incorrectos");
-        }
+        Authentication authentication =
+                authenticationManager.authenticate(
+                        new UsernamePasswordAuthenticationToken(
+                                request.username(),
+                                request.password()
+                        )
+                );
+
+        UserDetails userDetails =
+                (UserDetails) authentication.getPrincipal();
+
+        String token =
+                jwtService.generarToken(userDetails);
+
+        String nombreRol =
+                userDetails
+                        .getAuthorities()
+                        .iterator()
+                        .next()
+                        .getAuthority()
+                        .replace("ROLE_", "");
+
+        Rol rol = Rol.valueOf(nombreRol);
 
         return new LoginResponse(
-                "Login correcto",
-                usuario.getUsername(),
-                usuario.getRol());
+                token,
+                userDetails.getUsername(),
+                rol
+        );
     }
 }
